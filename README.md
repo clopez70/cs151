@@ -1,508 +1,909 @@
 # cs151
 
+/* ------------------------------------------------
+ prog2memory.cpp
+ 
+ Program #2: Memory game of guessing which X or O changed.
+ Class: CS 141
+ Author: Cynthia Lopez
+ Lab: Tues 11am
+ System:  C++ Mac Xcode
+ 
+ Grading Rubric:
+ 
+ 50 Execution points
+ 5 Displays header info on screen when run
+ 5 Displays instructions
+ 5 Output is formatted as shown in sample output
+ 3 Handles both upper and lower case input
+ 2 Input of 'x' in first prompt exits program
+ 5 Input can be adjacent or have spaces between them
+ 15 Displayed boards all have odd parity in rows and columns
+ 5 Repeated input of 'r' gives new valid random board each time
+ 5 Gives appropriate end of program messages
+ 
+ 45 Programming Style (Given only if program runs substantially correctly)
+ 5 Program naming convention is followed
+ 10 Meaningful identifier names
+ 10 Comments: Has header.  Comments on each block of code
+ 10 Appropriate data and control structures (-20 if using arrays or strings)
+ 10 Code Layout: Appropriate indentation and blank lines
+ ------------------------------------------------
+ */
+
 #include <iostream>
-#include <cstring>      // for getline
-#include <cstdlib>      // for the system command
-#include <cctype>       // For the letter checking functions, e.g. toupper( )
-#include <fstream>      // For file input and output
-#include <ctime>        // For srand()
+#include <ctime>
+#include <cstdlib>
 #include <cmath>
 using namespace std;
 
-// Global data structure for board
-const int BOARD_EDGE = 16;
-const int BOARD_SIZE = BOARD_EDGE * BOARD_EDGE;
-const int NUMBER_OF_ROBOTS = 4;
-// declare constants to later use instead of numbers to select values from theBoard
-const int NUMBER_OF_ELEMENTS = 5;   // Number of elements for each piece, enumerated below
-const int PIECE = 0;    // to reference the character, such as in: theBoard[ i][ PIECE]
-const int LEFT = 1;     // to reference the left wall character, such as in: theBoard[ i][ LEFT]
-const int ABOVE = 2;    // to reference the above wall character, such as in: theBoard[ i][ ABOVE]
-const int RIGHT = 3;    // to reference the right wall character, such as in: theBoard[ i][ RIGHT]
-const int BELOW = 4;    // to reference the below wall character, such as in: theBoard[ i][ BELOW]
+//initalizing char variables, which are going to be used globally
+char p0,p1,p2,p3,p4,
+     p5,p6,p7,p8,p9, p10,
+     p11,p12,p13,p14,
+     p15,p16,p17,p18,
+     p19,p20,p21,p22,
+     p23,p24,p25,p26,
+     p27,p28,p29,p30,
+     p31,p32,p33,p34,
+             p35;
 
 
-//-------------------------------------------------------------------------------------
-void displayIdentifyingInformationAndInstructions()
+
+//This function allows the extra space needed, once the user inputs the value they want to change.
+void extraSpace () {
+    cout << endl << endl << endl << endl << endl << endl << endl << endl << endl << endl;
+    cout << endl << endl << endl << endl << endl << endl << endl << endl << endl << endl;
+    cout << endl << endl << endl << endl << endl;
+}
+
+//This function displays the board since the p0-p35 are global variables which will change throughout the project.
+void display()
 {
-    // Display identifying information
-    cout << "Author: Cynthia Lopez           " << endl
-    << "Program 5: RicoRobots in C++         " << endl
-    << "TA: Ashour Dankha, T 11:00 AM        " << endl
-    << "March 22, 2018                       " << endl;
+    cout << "     1 2 3 4 5 6 \n";
+    cout << "   - - - - - - - - \n";
+    cout<< "A  | " << p0 << " " << p1 << " " << p2 << " " << p3 << " " << p4 << " " << p5 << " | A\n";
+    cout<< "B  | " << p6 << " " << p7 << " " << p8 << " " << p9 << " " << p10 << " " << p11 << " | B\n";
+    cout<< "C  | " << p12 << " " << p13 << " " << p14 << " " << p15 << " " << p16 << " " << p17 << " | C\n";
+    cout<< "D  | " << p18 << " " << p19 << " " << p20 << " " << p21 << " " << p22 << " " << p23 << " | D\n";
+    cout<< "E  | " << p24 << " " << p25 << " " << p26 << " " << p27 << " " << p28 << " " << p29 << " | E\n";
+    cout<< "F  | " << p30 << " " << p31 << " " << p32 << " " << p33 << " " << p34 << " " << p35 << " | F\n";
+}
+//This function allows the char p0-p35 to change when it is called.
+void refresh () {
+    srand(time(0));
+    //will keep track of x's in the rows, x1 meaning the x's in row 1, x2 row 2, etc.
+    int rowX1 = 0;
+    int rowX2 = 0;
+    int rowX3 = 0;
+    int rowX4 = 0;
+    int rowX5 = 0;
+    //will count how many x's in the col
+    int col1 = 0;
+    int col2 = 0;
+    int col3 = 0;
+    int col4 = 0;
+    int col5 = 0;
+    int col6 = 0;
+
+//row 1 randomize to only 0-9
+    p0 = (rand()% 10)+48;
+    p1 = (rand()% 10)+48;
+    p2 = (rand()% 10)+48;
+    p3 = (rand()% 10)+48;
+    p4 = (rand()% 10)+48;
+    p5 = (rand()% 10)+48;
+//row 2 randomize to only 0-9
+    p6 = (rand()% 10)+48;
+    p7 = (rand()% 10)+48;
+    p8 = (rand()% 10)+48;
+    p9 = (rand()% 10)+48;
+    p10 = (rand()% 10)+48;
+    p11 = (rand()% 10)+48;
+//row 3 randomize to only 0-9
+    p12 = (rand()% 10)+48;
+    p13 = (rand()% 10)+48;
+    p14 = (rand()% 10)+48;
+    p15 = (rand()% 10)+48;
+    p16 = (rand()% 10)+48;
+    p17 = (rand()% 10)+48;
+//row 4 randomize to only 0-9
+    p18 = (rand()% 10)+48;
+    p19 = (rand()% 10)+48;
+    p20 = (rand()% 10)+48;
+    p21 = (rand()% 10)+48;
+    p22 = (rand()% 10)+48;
+    p23 = (rand()% 10)+48;
+//row 5 randomize to only 0-9
+    p24 = (rand()% 10)+48;
+    p25 = (rand()% 10)+48;
+    p26 = (rand()% 10)+48;
+    p27 = (rand()% 10)+48;
+    p28 = (rand()% 10)+48;
+    p29 = (rand()% 10)+48;
+//row 6 (special row to manuiplate)
+    p30 = (rand()% 10)+48;
+    p31 = (rand()% 10)+48;
+    p32 = (rand()% 10)+48;
+    p33 = (rand()% 10)+48;
+    p34 = (rand()% 10)+48;
+    p35 = (rand()% 10)+48;
     
-    // Display Instructions
-    cout << "Welcome to Ricochet Robots                                     " << endl
-    << "(\'Ricochet Robot\' is a registered trademark of Hans im Glück " << endl
-    << "Munich, Germany, 1999. The game was created by Alex Randolph.) " << endl
-    << endl
-    << "The object of the game is to get the designated numbered robot " << endl
-    << "to the indicated letter position.                              " << endl
-    << "The numbered squares are all robots.  They unfortunately have  " << endl
-    << "no brakes, and so will continue in whatever direction they are " << endl
-    << "moving until they encountar an obstacle.                       " << endl
-    << "For each move enter the robot number and the desired direction." << endl
-    << "For instance entering                                          " << endl
-    << "   1 U " << endl
-    << "would move the #1 robot up as far as it can go.                " << endl
-    << "The first letter of input is the robot number (1 - 4),         " << endl
-    << "and the second letter is the direction:                        " << endl
-    << "  (L=left, U=up, R=right, D=down)                              " << endl
-    << "Enter x to exit.  Have fun!                                    " << endl
-    <<  endl;
-}//end displayIdentifyingInformationAndInstructions()
-
-
-//-------------------------------------------------------------------------------------
-// createBoard() - Create the board, initializing all the display characters
-//
-void createBoard( char theBoard[ BOARD_SIZE][ NUMBER_OF_ELEMENTS])
-{
-    for( int i=0; i<BOARD_SIZE; i++) {
-        theBoard[ i][ PIECE]= '.';    // Set each playing piece default
-        // set the default wall values to be blank
-        theBoard[ i][ LEFT]= ' ';
-        theBoard[ i][ ABOVE]= ' ';
-        theBoard[ i][ RIGHT]= ' ';
-        theBoard[ i][ BELOW]=  ' ';
-        
-        // reset the edge pieces
-        // reset the left wall if piece is on left edge
-        if( (i % BOARD_EDGE) == 0) {
-            theBoard[ i][ LEFT]= '|';
-        }
-        // reset the above wall if piece is on top edge
-        if( i < BOARD_EDGE) {
-            theBoard[ i][ ABOVE]= '-';
-        }
-        // reset the right wall if piece is on right edge
-        if( ((i+1) % BOARD_EDGE) == 0) {
-            theBoard[ i][ RIGHT]= '|';
-        }
-        // reset the below wall if piece is on bottom edge
-        if( i >= (BOARD_SIZE - BOARD_EDGE) ) {
-            theBoard[ i][ BELOW]= '-';
-        }
-    }//end for( int i...
     
-}//end createBoard()
-
-
-//-------------------------------------------------------------------------------------
-// readFromFileAndModifyBoard() - Read from data file, updating board accordingly
-//
-void readFromFileAndModifyBoard(
-                                char theBoard[ BOARD_SIZE][ NUMBER_OF_ELEMENTS],
-                                int theRobots[ ],
-                                int &numberOfDestinationPieces)
-{
-    int numberOfSpecialSquares;  // Read from file, denotes number of pieces with some kind of wall
-    string inputLine;            // Input line from file
-    int pieceNumber;             // pieceNumber for each square defined in data file
-    char c;
-    
-    ifstream inStream;           // declare an input file stream
-    inStream.open("board.txt");  // Open input file, associating the actual file name with "inStream"
-    if ( inStream.fail() ) {
-        cout << "Input file opening failed.  Exiting...\n\n";
-        exit(-1);
+//ROW 1 ROW 1 ROW 1 ROW 1 ROW 1 ROW 1 ROW 1
+    //p0 will print O if even, X if odd
+    if (p0 % 2 == 0) {
+        p0 = 'O';
+    }
+    else {
+        p0 = 'X';
+        rowX1 = rowX1 + 1; //row of X's
+        col1 = col1 + 1; //col of X's
     }
     
-    // Read from file one line at a time.  First read the top three data file lines which are documentation.
-    getline( inStream, inputLine);
-    getline( inStream, inputLine);
-    getline( inStream, inputLine);
-    
-    inStream >> numberOfDestinationPieces;      // read how many destination pieces there are
-    inStream >> numberOfSpecialSquares;         // number of square with walls around them somewhere
-    inStream.get( c);                           // Get rid of return character at end of current line
-    // to get ready for reading a line at a time below
-    
-    // process the special squares, updating the board
-    for( int i=0; i<numberOfSpecialSquares; i++) {
-        getline( inStream, inputLine);
-        char *pInputLine = &inputLine[0];
-        // Extract the piece number from the input line array
-        sscanf( pInputLine, "%d", &pieceNumber);
-        // Advance the inputLine pointer to the space after the number
-        pInputLine = strchr( pInputLine, ' ');
-        
-        // Read the information on whether or not there is each of the potential 4 walls.
-        // The four values read correspond in order to the pieces on all four sides,
-        // which are defined as global constants for the values LEFT=1, ABOVE=2, RIGHT=3, BELOW=4
-        for( int position=1; position<=4; position++) {
-            pInputLine++;   // advance to next character to be read
-            sscanf( pInputLine, " %c", &c);         // Read the next potential wall character
-            // Convert it to a blank if it was '0'.  '0' was left in input file to make it easier to read.
-            if( c=='0') {
-                c = ' ';
-            }
-            theBoard[ pieceNumber][ position] = c;
-        }
-        pInputLine++;
-        
-        // See if there is a piece letter still to be read on this input line.
-        // Do this by finding the end of the line, and seeing the length of the string
-        // after that.
-        // An inputline sample for piece 18 would be:
-        // 18 00|- A
-        if( strlen( pInputLine) > 0) {
-            sscanf( pInputLine, " %c", &theBoard[ pieceNumber][ PIECE]);
-        }
-        
-    }//end for( int i...
-    
-    // At the end of the data file read the information on the location of the robots, updating the board.
-    char junk[80];           // used to read and discard input file information
-    // Loop starts counting from 1 (rather than 0), since we ignore the 0th position
-    // of the robots array, so that robot numbers correspond to what is shown
-    // on the board.
-    for( int i=1; i<=NUMBER_OF_ROBOTS; i++) {
-        inStream >> theRobots[ i];
-        inStream.getline( junk, '\n');    // discard rest of line, which is color information, if using graphics
-        // set robot on board, converting the integer value to a character
-        theBoard[ theRobots[ i]][ PIECE] = (char)('0'+i);     // record the robot number in place on board
+    //p1 will print O if even, X if odd
+    if (p1 % 2 == 0) {
+        p1 = 'O';
+    }
+    else {
+        p1 = 'X';
+        rowX1 = rowX1 + 1; //row of X's
+        col2 = col2 + 1; //col of X's
     }
     
-    inStream.close();         // close the input file stream
-}//end readFromFileAndModifyBoard()
-
-
-//-------------------------------------------------------------------------------------
-// Display the Board
-//
-void displayTheBoard( char theBoard[ BOARD_SIZE][ NUMBER_OF_ELEMENTS])
-{
-    // display the top edge
-    cout << "  ---------------------------------------------------------------- " << endl;
-    
-    // display the "body" of the board
-    for( int i=0; i<BOARD_SIZE; i++) {
-        // Figure out what character should be displayed to the left.  It will
-        // be a wall if the current spot has a left wall, or if the spot to the
-        // left has a right wall.
-        
-        char leftCharacter = theBoard[ i][ LEFT];   // set left display char
-        // See if the piece to the left has a right wall.  Don't do this for the
-        // first piece on the board, since it has no left neighbor.
-        if ( (i>0) && (theBoard[ i-1][ RIGHT] != ' ')) {
-            leftCharacter = theBoard[ i-1][ RIGHT];
-        }
-        cout << " " << leftCharacter << " " << theBoard[ i][ PIECE];
-        // see if we're at the end of a row
-        if( ((i+1) % BOARD_EDGE) == 0) {
-            // we are at the end of a row, so display right wall and go to next line
-            cout << "  " << theBoard[ i][ RIGHT] << endl;
-            // Now display any walls immediately below the line of pieces just displayed
-            // Backup our index counter j to the beginning of this line again, to find any
-            // walls displayed below this line.  Don't do it for the bottom row though.
-            if( i < BOARD_SIZE - BOARD_EDGE) {
-                
-                cout << " |";       // display the left boundary
-                for( int j=i-BOARD_EDGE+1; j<(i+1); j++) {
-                    // Set the character to be displayed.  This is a wall if the
-                    // current spot has a wall below, or if the spot below has a wall
-                    // above.
-                    char belowCharacter = theBoard[ j][ BELOW];
-                    // Only check the square below if we're NOT on the bottom row
-                    if ( (j<(BOARD_SIZE - BOARD_EDGE)) &&      // verify not on bottom row
-                        (theBoard[ j+16][ ABOVE] != ' ')) {    // piece below has wall above
-                        belowCharacter = theBoard[ j+16][ ABOVE];
-                    }
-                    for( int i=0; i<3; i++) {
-                        cout << belowCharacter;        // display the character
-                    }
-                    // display extra spaces, if we're not at the end of a row
-                    if( ((j+1) % BOARD_EDGE) != 0) {
-                        cout << " ";
-                    }
-                }//end for( int j...
-                cout << " |" << endl;       // display the right boundary
-            }//end if( i< BOARD_SIZE...
-            
-        }//end if( ((i+1...
-        
-    }//end for( int i=0;...
-    
-    // display the bottom edge
-    cout << "  ---------------------------------------------------------------- " << endl;
-    cout << endl;
-}//end displayTheBoard()
-
-
-void userD (char theBoard[ BOARD_SIZE][ NUMBER_OF_ELEMENTS], int theRobots[NUMBER_OF_ROBOTS + 1],int goalRobot, char userDirection)
-{
-    
-    // To make moves you selectively change values on the board.  For instance to move robot 2 up 1 square:
-    int robotIndex = theRobots[ goalRobot];
-    theBoard[ robotIndex][ PIECE] = '.';         // blank out where we're coming FROM
-    bool notEmpty = false;
-    
-    if ( userDirection == 'u') //direction up
+    //p2 will print O if even, X if odd
+    if (p2 % 2 == 0) {
+        p2 = 'O';
+    }
+    else {
+        p2 = 'X';
+        rowX1 = rowX1 + 1; //row of X's
+        col3 = col3 + 1; //col of X's
+    }
+    //p3 will print O if even, X if odd
+    if (p3 % 2 == 0)
     {
-        while ( notEmpty == false )
-        {
-            if ( (theBoard[robotIndex][ABOVE] != ' ') || (theBoard[robotIndex-16][BELOW] != ' ') )
-            {
-                notEmpty = true;
-            }
-            else
-            {
-                theRobots[ goalRobot] = robotIndex - 16;     // Reset robot position index to the square above
-                robotIndex = theRobots[ goalRobot];          // Get the new stored value reflecting the new position
-                //checks for other robots
-                if (theBoard[robotIndex][PIECE] == 49 || theBoard[robotIndex][PIECE] == 50 || theBoard[robotIndex][PIECE] == 51 || theBoard[robotIndex][PIECE] == 52)
-                {
-                    theRobots[ goalRobot] = robotIndex + 16;
-                    robotIndex = theRobots[ goalRobot];
-                    notEmpty = true;
-                }
-            }
-        }//end of while loop
-    }//end of if statement
+        p3 = 'O';
+    }
+    else {
+        p3 = 'X';
+        rowX1 = rowX1 + 1; //row of X's
+        col4 = col4 + 1; //col of X's
+    }
+    //p4 will print O if even, X if odd
+    if (p4 % 2 == 0) {
+        p4 = 'O';
+    }
+    else {
+        p4 = 'X';
+        rowX1 = rowX1 + 1; //row of X's
+        col5 = col5 + 1; //col of X's
+    }
+    //p5 will print O if even, X if odd
+    if (rowX1 % 2 == 0) {
+        p5 = 'X';
+        col6 = col6 + 1; //col of X's
+    }
+    else {
+        p5 = 'O';
+    }
     
-    else if ( userDirection == 'd') //direction down
-    {
-        while ( notEmpty == false )     //detects if empty space
-        {
-            if ( (theBoard[robotIndex][BELOW] != ' ') || (theBoard[robotIndex+16][ABOVE] != ' ') )    //no empty space so cannot move
-            {
-                notEmpty = true;
-            }
-            else
-            {
-                theRobots[ goalRobot] = robotIndex + 16;     // Reset robot position index to the square above
-                robotIndex = theRobots[ goalRobot];          // Get the new stored value reflecting the new position
-                //checks for other robots
-                if (theBoard[robotIndex][PIECE] == 49 || theBoard[robotIndex][PIECE] == 50 || theBoard[robotIndex][PIECE] == 51 || theBoard[robotIndex][PIECE] == 52)
-                {
-                    theRobots[ goalRobot] = robotIndex + 16;
-                    robotIndex = theRobots[ goalRobot];
-                    notEmpty = true;
-                }
-            }
-            
-        }//end of while loop
-    }//end of direction down
+// ROW 2 ROW 2 ROW 2 ROW 2 ROW 2 ROW 2 ROW 2
+    //p6 will print O if even, X if odd
+    if (p6 % 2 == 0) {
+        p6 = 'O';
+    }
+    else {
+        p6 = 'X';
+        rowX2 = rowX2 + 1; //row of X's
+        col1 = col1 + 1; //col of X's
+    }
+    //p7 will print O if even, X if odd
+    if (p7 % 2 == 0) {
+        p7 = 'O';
+    }
+    else {
+        p7 = 'X';
+        rowX2 = rowX2 + 1; //row of X's
+        col2 = col2 + 1; //col of X's
+    }
+    //p8 will print O if even, X if odd
+    if (p8 % 2 == 0) {
+        p8 = 'O';
+    }
+    else {
+        p8 = 'X';
+        rowX2 = rowX2 + 1; //row of X's
+        col3 = col3 + 1; //col of X's
+    }
+    //p9 will print O if even, X if odd
+    if (p9 % 2 == 0) {
+        p9 = 'O';
+    }
+    else {
+        p9 = 'X';
+        rowX2 = rowX2 + 1; //row of X's
+        col4 = col4 + 1; //col of X's
+    }
+    //p10 will print O if even, X if odd
+    if (p10 % 2 == 0) {
+        p10 = 'O';
+    }
+    else {
+        p10 = 'X';
+        rowX2 = rowX2 + 1; //row of X's
+        col5 = col5 + 1; //col of X's
+    }
+    //p11 will print x if row is even, o if odd
+    if (rowX2 % 2 == 0) {
+        p11 = 'X';
+        col6 = col6 + 1; //col of X's
+    }
+    else {
+        p11 = 'O';
+    }
     
-    else if ( userDirection == 'l') //direction left
-    {
-        while ( notEmpty == false )
-        {
-            if ( (theBoard[robotIndex][LEFT] != ' ') || (theBoard[robotIndex-1][RIGHT] != ' ') ) //detects if empty space
-            {
-                notEmpty = true;    //no empty space so cannot move
-            }
-            else
-            {
-                theRobots[ goalRobot] = robotIndex - 1;     // Reset robot position index to the square above
-                robotIndex = theRobots[ goalRobot];          // Get the new stored value reflecting the new position
-                
-                if (theBoard[robotIndex][PIECE] == 49 || theBoard[robotIndex][PIECE] == 50 || theBoard[robotIndex][PIECE] == 51 || theBoard[robotIndex][PIECE] == 52)
-                {
-                    theRobots[ goalRobot] = robotIndex + 1;
-                    robotIndex = theRobots[ goalRobot];
-                    notEmpty = true;
-                }
-            }//end of else statement
-        }//end of while loop
-    }//end of direction left
+// ROW 3 ROW 3 ROW 3 ROW 3 ROW 3 ROW 3 ROW 3
+    //p12 will print O if even, X if odd
+    if (p12 % 2 == 0) {
+        p12 = 'O';
+    }
+    else {
+        p12 = 'X';
+        rowX3 = rowX3 + 1; //row of X's
+        col1 = col1 + 1; //col of X's
+    }
+    //p13 will print O if even, X if odd
+    if (p13 % 2 == 0) {
+        p13 = 'O';
+    }
+    else {
+        p13 = 'X';
+        rowX3 = rowX3 + 1; //row of X's
+        col2 = col2 + 1; //col of X's
+    }
+    //p14 will print O if even, X if odd
+    if (p14 % 2 == 0) {
+        p14 = 'O';
+    }
+    else {
+        p14 = 'X';
+        rowX3 = rowX3 + 1; //row of X's
+        col3 = col3 + 1; //col of X's
+    }
+    //p15 will print O if even, X if odd
+    if (p15 % 2 == 0) {
+        p15 = 'O';
+    }
+    else {
+        p15 = 'X';
+        rowX3 = rowX3 + 1; //row of X's
+        col4 = col4 + 1; //col of X's
+    }
+    //p16 will print O if even, X if odd
+    if (p16 % 2 == 0) {
+        p16 = 'O';
+    }
+    else {
+        p16 = 'X';
+        rowX3 = rowX3 + 1; //row of X's
+        col5 = col5 + 1; //col of X's
+    }
+    //p17 will print O if even, X if odd
+    if (rowX3 % 2 == 0) {
+        p17 = 'X';
+        col6 = col6 + 1; //col of X's
+    }
+    else {
+        p17 = 'O';
+    }
     
-    else if ( userDirection == 'r')     //directoin right
-    {
-        while ( notEmpty == false )
-        {
-            if ( (theBoard[robotIndex][RIGHT] != ' ') || (theBoard[robotIndex+1][LEFT] != ' ') )
-            {
-                notEmpty = true;
-            }
-            else
-            {
-                theRobots[ goalRobot] = robotIndex + 1;     // Reset robot position index to the square above
-                robotIndex = theRobots[ goalRobot];          // Get the new stored value reflecting the new position
-                
-                if (theBoard[robotIndex][PIECE] == 49 || theBoard[robotIndex][PIECE] == 50 || theBoard[robotIndex][PIECE] == 51 || theBoard[robotIndex][PIECE] == 52)
-                {
-                    theRobots[ goalRobot] = robotIndex - 1;
-                    robotIndex = theRobots[ goalRobot];
-                    notEmpty = true;
-                }
-            }//end of else statement
-        }//end of while loop
-    }//end of if statement if direction is right
+// ROW 4 ROW 4 ROW 4 ROW 4 ROW 4 ROW 4 ROW 4
+    //p18 will print O if even, X if odd
+    if (p18 % 2 == 0) {
+        p18 = 'O';
+    }
+    else {
+        p18 = 'X';
+        rowX4 = rowX4 + 1; //row of X's
+        col1 = col1 + 1; //col of X's
+    }
+    //p19 will print O if even, X if odd
+    if (p19 % 2 == 0) {
+        p19 = 'O';
+    }
+    else {
+        p19 = 'X';
+        rowX4 = rowX4 + 1; //row of X's
+        col2 = col2 + 1; //col of X's
+    }
+    //p20 will print O if even, X if odd
+    if (p20 % 2 == 0) {
+        p20 = 'O';
+    }
+    else {
+        p20 = 'X';
+        rowX4 = rowX4 + 1; //row of X's
+        col3 = col3 + 1; //col of X's
+    }
+    //p21 will print O if even, X if odd
+    if (p21 % 2 == 0) {
+        p21 = 'O';
+    }
+    else {
+        p21 = 'X';
+        rowX4 = rowX4 + 1; //row of X's
+        col4 = col4 + 1; //col of X's
+    }
+    //p22 will print O if even, X if odd
+    if (p22 % 2 == 0) {
+        p22 = 'O';
+    }
+    else {
+        p22 = 'X';
+        rowX4 = rowX4 + 1; //row of X's
+        col5 = col5 + 1; //col of X's
+    }
+    //p23 will print x if even amount of x, O if odd
+    if (rowX4 % 2 == 0) {
+        p23 = 'X';
+        col6 = col6 + 1; //col of X's
+    }
+    else {
+        p23 = 'O';
+    }
     
-    robotIndex = theRobots[ goalRobot];          // Get the new stored value reflecting the new position
-    theBoard[ robotIndex][ PIECE] = '0'+goalRobot; //conversion of char to int
-    displayTheBoard( theBoard); //displays the board
+// ROW 5 ROW 5 ROW 5 ROW 5 ROW 5 ROW 5 ROW 5
+    //p24 will print O if even, X if odd
+    if (p24 % 2 == 0) {
+        p24 = 'O';
+    }
+    else {
+        p24 = 'X';
+        rowX5 = rowX5 + 1; //row of X's
+        col1 = col1 + 1; //col of X's
+    }
+    //p25 will print O if even, X if odd
+    if (p25 % 2 == 0) {
+        p25 = 'O';
+    }
+    else {
+        p25 = 'X';
+        rowX5 = rowX5 + 1; //row of X's
+        col2 = col2 + 1; //col of X's
+    }
+    //p26 will print O if even, X if odd
+    if (p26 % 2 == 0) {
+        p26 = 'O';
+    }
+    else {
+        p26 = 'X';
+        rowX5 = rowX5 + 1; //row of X's
+        col3 = col3 + 1; //col of X's
+    }
+    //p27 will print O if even, X if odd
+    if (p27 % 2 == 0) {
+        p27 = 'O';
+    }
+    else {
+        p27 = 'X';
+        rowX5 = rowX5 + 1; //row of X's
+        col4 = col4 + 1; //col of X's
+    }
+    //p28 will print O if even, X if odd
+    if (p28 % 2 == 0) {
+        p28 = 'O';
+    }
+    else {
+        p28 = 'X';
+        rowX5 = rowX5 + 1; //row of X's
+        col5 = col5 + 1; //col of X's
+    }
+    //p23 will print x if even amount of x, O if odd
+    if (rowX5 % 2 == 0) {
+        p29 = 'X';
+        col6 = col6 + 1; //col of X's
+    }
+    else {
+        p29 = 'O';
+    }
+    
+// ROW 6 ROW 6 ROW 6 ROW 6 ROW 6 ROW 6
+    //We will manipulate this row to make the board an odd parity. So depends on # of x's in rows,
+    //if even #, will print out another x to make, if odd will be 'o'
+    if (col1 % 2 == 0) {
+        p30 = 'X';
+    }
+    else {
+        p30 = 'O';
+    }
+    //col 2, # of x will be odd
+    if (col2 % 2 == 0) {
+        p31 = 'X';
+    }
+    else {
+        p31 = 'O';
+    }
+    //col 3, # of x will be odd
+    if (col3 % 2 == 0) {
+        p32 = 'X';
+    }
+    else {
+        p32 = 'O';
+    }
+    //col 4, # of x will be odd
+    if (col4 % 2 == 0) {
+        p33 = 'X';
+    }
+    else {
+        p33 = 'O';
+    }
+    //col 5, # of x will be odd
+    if (col5 % 2 == 0) {
+        p34 = 'X';
+    }
+    else {
+        p34 = 'O';
+    }
+    //col 6, # of x will be odd
+    if (col6 % 2 == 0) {
+        p35 = 'X';
+    }
+    else {
+        p35 = 'O';
+    }
+//once all char values have been declared, we can use the display() function to display the board.
+    display();
     
 }
 
-//-------------------------------------------------------------------------------------
-// main() - main part of program, that drives everything else
-//
-int main()
-{
-    // theBoard itself is represented by a one-dimensional array.
-    // The other entries are used to keep track of walls.  Each row
-    // in theBoard array will contain the character to be displayed,
-    // followed by any "walls" to be displayed around the displayed
-    // character.  For instance the first couple of entries are be:
-    //
-    //       PIECE   LEFT ABOVE RIGHT BELOW
-    //      ---0---  --1-  --2-  --3-  --4-
-    //    0    .       |     _
-    //    1    .             _
-    //   ...
-    //   255   .                   |     _
-    //
-    char theBoard[ BOARD_SIZE][ NUMBER_OF_ELEMENTS];
-    // Declare the 4 robots, which will store the board position of where they are found
-    // Robots are displayed using values 1-4.  We declare 5 robots, though we will never use
-    // the 0th robot in the array, so that we can use the robot digit itself as the index.
-    int theRobots[ NUMBER_OF_ROBOTS + 1] = {0,0,0,0,0};
-    
-    int goalRobot;                  // the robot that needs to reach the goal
-    char destinationLetter;         // the goal letter
-    int numberOfDestinationPieces;  // Number of destination pieces.
-    char userDirection; // user input of either u,d,l,r
-    char userDecision; // user input of default,random, or select on how to play game
-    srand(time(0)); //allows for randomization
-    bool winner = false;
-    int counter = 1;
-    displayIdentifyingInformationAndInstructions();
-    createBoard( theBoard);   // create the board, initializing all pieces to their default settings
-    readFromFileAndModifyBoard( theBoard, theRobots, numberOfDestinationPieces); // read from the datafile, updating board
-    
-    // Hard-code the robot to be used and the destination letter and position.
-    // Your version will also need to allow selecting the goal robot and destination letter, but then needs
-    // to find the goal position.  Your version must also allow for these to be chosen at random.
+int main() {
+    //initializing user input for two inputs, and the guesses one would make as part of the game
+    char firstL;
+    char secondL;
+    char guess1;
+    char guess2;
+    //loop iteration for a while loop
+    int loop = 0;
+//This is the introduction of the game
+    //it will explain the rules of the game and how to play and move forward.
+    cout << "Author:  Cynthia Lopez \n";
+    cout << "Class:   CS 141, Spring 2018 \n";
+    cout << "Lab:     Tue 11am \n";
+    cout << "Program: #2, Memory Game \n";
+    cout << endl;
+    cout << "Welcome to the memory game! \n";
+    cout << endl;
+    cout << "Look away from the board and have a helper enter r \n";
+    cout << "to randomize the board until they have a random board that they like. \n";
+    cout << "Then you glance at it and try toimprint it in your mind and look away. \n";
+    cout << "Your helper will then select a single piece to be flipped by choosing \n";
+    cout << "its row and column. The changed board is then displayed.  \n";
+    cout << "You then must try to guess which one it was. Enter x to exit the program. \n";
+    cout << endl << endl;
     
     
-    //Ask the user whether they want random (r), default (d), or selective (s)
-    cout << "Enter 'r' for random robot and goal, 'd' for default or 's' to select:";
-    cin >> userDecision;
-    userDecision = toupper(userDecision);
     
-    if (userDecision == 'D')    //default 2 M
-    {
-        //automatically sets it to be 2 and M
-        goalRobot = 2;
-        destinationLetter = 'M';
-        
-        for (int i = 0; i < BOARD_SIZE; i++)        //this will remove all but the destination letter and keep the robots
-        {
-            if ( isalpha(theBoard[i][NUMBER_OF_ELEMENTS]) && theBoard[i][NUMBER_OF_ELEMENTS] != destinationLetter )
-            {
-                theBoard[i][NUMBER_OF_ELEMENTS] = '.';
-            }
+    
+    refresh (); //this will generate the first board, later they can decide if they would like to change it.
+    //asking user to enter either r,x, or a row and colummn to change from x to o, or o to x
+    cout << endl;
+    cout << "Enter r to randomize to board, or row and column to change a value ->";
+    
+    cin >> firstL;  //take in the first char, r, x, or A,B,C,D,E,F
+    cout << endl;
+    
+    while ( loop < 1 ) {
+        // when r is pressed then it will call the function refresh to regenerate a new board until desire
+        if (firstL == 'r' || firstL == 'R') {
+            refresh();
+            cout << endl;
+            cout << "Enter r to randomize to board, or row and column to change a value ->";
+            cin >> firstL;
+            cout << endl << endl;
+            
+            continue; //iterates the next loop (you can also note that loop is not being added to 1 as they can press r as many times.
         }
-        
-        
-        cout << "Move robot " << goalRobot << " to square " << destinationLetter << endl; //displays the board and which one to move
-        displayTheBoard( theBoard);
-        
-        while ( winner == false )
+        //will exit game
+        else if (firstL == 'X' || firstL == 'x') {
+            cout << "GoodBye." << endl;
+            exit (0);
+        }
+
+//p0 ....p5 for row A1 to A6
+        else if (firstL == 'A' || firstL == 'a')
         {
-            //will ask user to input a robot and direction
-            cout << counter << ". Please enter the robot to move and the direction (e.g. 2 r): ";
-            cin >> goalRobot;
-            userDirection = tolower(userDirection); //LOWER CASE AUTOMATICALLY
-            if (userDirection == 'l' || userDirection == 'r' || userDirection == 'u' || userDirection == 'd') //checks for other inputs if not the right one
-            {
-                userD (theBoard, theRobots, goalRobot, userDirection);
-                counter++;//keeps track of moves
+            //loop is being added to 1 so that the while loop stops
+            loop = loop + 1;
+            cin >> secondL; // takes in the second char
+            if (secondL == '1'){
+                //if p0 is x, user changes it to o
+                if (p0 == 'X') {
+                    p0 = 'O';
+                }
+                else {
+                    p0 = 'X';
+                }
             }
-            else
+            else if (secondL == '2'){
+                //p1 is x, user changes it to o, else x
+                if (p1 == 'X') {
+                    p1 = 'O';
+                }
+                else {
+                    p1 = 'X';
+                }
+            }
+            else if (secondL == '3'){
+                //p2 is x, user changes it to o, else x
+                if (p2 == 'X') {
+                    p2 = 'O';
+                }
+                else {
+                    p2 = 'X';
+                }
+            }
+            else if (secondL == '4'){
+                //p3 is x, user changes it to o, else x
+                if (p3 == 'X') {
+                    p3 = 'O';
+                }
+                else {
+                    p3 = 'X';
+                }
+            }
+            else if (secondL == '5'){
+                //p3 is x, user changes it to o, else x
+                if (p4 == 'X') {
+                    p4 = 'O';
+                }
+                else {
+                    p4 = 'X';
+                }
+            }
+            else //if (secondL == '6')
+              //p5 is x, user changes it to o, else x
             {
-                cout << "Retry." << endl;
-                continue;
-            }//allows for retrys
-        }//end of while loop
+                if (p5 == 'X') {
+                    p5 = 'O';
+                }
+                else {
+                    p5 = 'X';
+                }
+            }
+            extraSpace (); // this will output 25 lines
+            break; //if statement satisfied, then it will jump to the end of the loop
+        }
+
+//p6 ....p11 for row B1 to B6
+        else if (firstL == 'B' || firstL == 'b')
+            {
+                loop = loop + 1; // +loop
+                cin >> secondL; //takes in second char
+                //p6 is x, user changes it to o, else x
+                if (secondL == '1'){
+                    if (p6 == 'X') {
+                        p6 = 'O';
+                    }
+                    else {
+                        p6 = 'X';
+                    }
+                }
+                else if (secondL == '2'){
+                    //p7 is x, user changes it to o, else x
+                    if (p7 == 'X') {
+                        p7 = 'O';
+                    }
+                    else {
+                        p7 = 'X';
+                    }
+                }
+                else if (secondL == '3'){
+                    //p8 is x, user changes it to o, else x
+                    if (p8 == 'X') {
+                        p8 = 'O';
+                    }
+                    else {
+                        p8 = 'X';
+                    }
+                }
+                else if (secondL == '4'){
+                    //p9 is x, user changes it to o, else x
+                    if (p9 == 'X') {
+                        p9 = 'O';
+                    }
+                    else {
+                        p9 = 'X';
+                    }
+                }
+                else if (secondL == '5'){
+                    //p10 is x, user changes it to o, else x
+                    if (p10 == 'X') {
+                        p10 = 'O';
+                    }
+                    else {
+                        p10 = 'X';
+                    }
+                }
+                else //if (secondL == '6')
+                {
+                    if (p11 == 'X') {
+                        p11 = 'O';
+                    }
+                    else {
+                        p11 = 'X';
+                    }
+                }
+                extraSpace ();
+                break;
+            }
+            
+ //p12 ....p17 for row C1 to C6
+            else if (firstL == 'C' || firstL == 'c')
+            {
+                loop = loop + 1;
+                cin >> secondL;
+                if (secondL == '1'){
+                    if (p12 == 'X') {
+                        p12 = 'O';
+                    }
+                    else {
+                        p12 = 'X';
+                    }
+                }
+                else if (secondL == '2'){
+                    
+                    if (p13 == 'X') {
+                        p13 = 'O';
+                    }
+                    else {
+                        p13 = 'X';
+                    }
+                }
+                else if (secondL == '3'){
+                    
+                    if (p14 == 'X') {
+                        p14 = 'O';
+                    }
+                    else {
+                        p14 = 'X';
+                    }
+                }
+                else if (secondL == '4'){
+                    
+                    if (p15 == 'X') {
+                        p15 = 'O';
+                    }
+                    else {
+                        p15 = 'X';
+                    }
+                }
+                else if (secondL == '5'){
+                    
+                    if (p16 == 'X') {
+                        p16 = 'O';
+                    }
+                    else {
+                        p16 = 'X';
+                    }
+                }
+                else //if (secondL == '6')
+                {
+                    if (p17 == 'X') {
+                        p17 = 'O';
+                    }
+                    else {
+                        p17 = 'X';
+                    }
+                }
+                extraSpace ();
+                break;
+            }
+        
+            
+//p18 ....p23 for row B1 to B6
+            else if (firstL == 'D' || firstL == 'd')
+            {
+                loop = loop + 1;
+                cin >> secondL;
+                if (secondL == '1'){
+                    if (p18 == 'X') {
+                        p18 = 'O';
+                    }
+                    else {
+                        p18 = 'X';
+                    }
+                }
+                else if (secondL == '2'){
+                    
+                    if (p19 == 'X') {
+                        p19 = 'O';
+                    }
+                    else {
+                        p19 = 'X';
+                    }
+                }
+                else if (secondL == '3'){
+                    
+                    if (p20 == 'X') {
+                        p20 = 'O';
+                    }
+                    else {
+                        p20 = 'X';
+                    }
+                }
+                else if (secondL == '4'){
+                    
+                    if (p21 == 'X') {
+                        p21 = 'O';
+                    }
+                    else {
+                        p21 = 'X';
+                    }
+                }
+                else if (secondL == '5'){
+                    
+                    if (p22 == 'X') {
+                        p22 = 'O';
+                    }
+                    else {
+                        p22 = 'X';
+                    }
+                }
+                else //if (secondL == '6')
+                {
+                    if (p23 == 'X') {
+                        p23 = 'O';
+                    }
+                    else {
+                        p23 = 'X';
+                    }
+                }
+                extraSpace ();
+                break;
+            }
+  //p24 ....p29 for row E1 to E6
+            else if (firstL == 'E' || firstL == 'e')
+            {
+                loop = loop + 1;
+                cin >> secondL;
+                if (secondL == '1'){
+                    if (p24 == 'X') {
+                        p24 = 'O';
+                    }
+                    else {
+                        p24 = 'X';
+                    }
+                }
+                else if (secondL == '2'){
+                    
+                    if (p25 == 'X') {
+                        p25 = 'O';
+                    }
+                    else {
+                        p25 = 'X';
+                    }
+                }
+                else if (secondL == '3'){
+                    
+                    if (p26 == 'X') {
+                        p26 = 'O';
+                    }
+                    else {
+                        p26 = 'X';
+                    }
+                }
+                else if (secondL == '4'){
+                    
+                    if (p27 == 'X') {
+                        p27 = 'O';
+                    }
+                    else {
+                        p27 = 'X';
+                    }
+                }
+                else if (secondL == '5'){
+                    
+                    if (p28 == 'X') {
+                        p28 = 'O';
+                    }
+                    else {
+                        p28 = 'X';
+                    }
+                }
+                else //if (secondL == '6')
+                {
+                    if (p29 == 'X') {
+                        p29 = 'O';
+                    }
+                    else {
+                        p29 = 'X';
+                    }
+                }
+                extraSpace ();
+                break;
+            }
+//p30 ....p35 for row F1 to F6
+            else if (firstL == 'F' || firstL == 'f')
+            {
+                loop = loop + 1;
+                cin >> secondL;
+                if (secondL == '1'){
+                    if (p30 == 'X') {
+                        p30 = 'O';
+                    }
+                    else {
+                        p30 = 'X';
+                    }
+                }
+                else if (secondL == '2'){
+                    
+                    if (p31 == 'X') {
+                        p31 = 'O';
+                    }
+                    else {
+                        p31 = 'X';
+                    }
+                }
+                else if (secondL == '3'){
+                    
+                    if (p32 == 'X') {
+                        p32 = 'O';
+                    }
+                    else {
+                        p32 = 'X';
+                    }
+                }
+                else if (secondL == '4'){
+                    
+                    if (p33 == 'X') {
+                        p33 = 'O';
+                    }
+                    else {
+                        p33 = 'X';
+                    }
+                }
+                else if (secondL == '5'){
+                    
+                    if (p34 == 'X') {
+                        p34 = 'O';
+                    }
+                    else {
+                        p34 = 'X';
+                    }
+                }
+                else //if (secondL == '6')
+                {
+                    if (p35 == 'X') {
+                        p35 = 'O';
+                    }
+                    else {
+                        p35 = 'X';
+                    }
+                }
+                extraSpace ();
+                break;
+            }
+        
+        }
+//once the user changes one of the values, then it will display after the loop
+    display();
+    cout << endl;
+//Guesser will have to guess which variable was changed
+    cout << "What piece do you think it was? ->";
+    cin >> guess1 >> guess2;
+    cout << endl;
+    
+    if ( (firstL == guess1) && (secondL == guess2) ) {
+        //if guesser is correct, then it will print out congrats.
+        cout << "*** Congratulations, you did it! ***" << endl << endl;
+        cout << "Thank you for playing.  Exiting..." << endl << endl;
     }
-    else if (userDecision == 'R') //user input R = random
-    {
-        //randomizies both letter and number
-        goalRobot = (rand() % 4) + 1;
-        destinationLetter = char((rand() % 14) + 65);
-        cout << "Move robot " << goalRobot << " to square " << destinationLetter << endl; //displays the choices
-        
-        for (int i = 0; i < BOARD_SIZE; i++)
-        {
-            if ( isalpha(theBoard[i][NUMBER_OF_ELEMENTS]) && theBoard[i][NUMBER_OF_ELEMENTS] != (destinationLetter) )
-                //this will remove all but the destination letter and keep the robots
-            {
-                theBoard[i][NUMBER_OF_ELEMENTS] = '.';
-            }
-        }
-        displayTheBoard( theBoard);//displays board
-        
-        while ( winner == false )
-        {
-            cout << counter << ". Please enter the robot to move and the direction (e.g. 2 r): ";
-            cin >> goalRobot >> userDirection;
-            //will ask user to input a robot and direction
-            if (userDirection == 'l' || userDirection == 'r' || userDirection == 'u' || userDirection == 'd')
-            {
-                userD (theBoard, theRobots, goalRobot, userDirection); //calls function
-                counter++; //keeps track
-            }
-            else
-            {
-                cout << "Retry." << endl;
-                continue;
-            }//checks for other inputs if not the right one
-        }
-        
-        
+    else {
+        //if user is wrong, then it will print out the correct answer and exit game.
+        cout << "Nope that was not right. The correct answer was: " << firstL << secondL << endl;
+        cout << "Exiting..." << endl << endl;
     }
-    else if (userDecision == 'S')
-    {
-        displayTheBoard( theBoard);
-        cout << "Please select the robot and its destination:";
-        //will ask user to input a robot and letter
-        cin >> goalRobot;
-        cin >> destinationLetter;
-        destinationLetter = toupper(destinationLetter);
-        cout << "Move robot " << goalRobot << " to square " << destinationLetter << endl;
-        
-        //this will remove all but the destination letter and keep the robots
-        for (int i = 0; i < BOARD_SIZE; i++)
-        {
-            if ( isalpha(theBoard[i][NUMBER_OF_ELEMENTS]) && theBoard[i][NUMBER_OF_ELEMENTS] != (destinationLetter) )
-            {
-                theBoard[i][NUMBER_OF_ELEMENTS] = '.';
-            }
-        }
-        displayTheBoard( theBoard);
-        
-        while ( winner == false )
-        {
-            //asks for what robot to move and where to move it.
-            cout << counter << ". Please enter the robot to move and the direction (e.g. 2 r): ";
-            cin >> goalRobot >> userDirection;
-            if (userDirection == 'l' || userDirection == 'r' || userDirection == 'u' || userDirection == 'd')
-            {
-                userD (theBoard, theRobots, goalRobot, userDirection); //calls function
-                counter++; //keeps tracks of moves
-            }
-            else //if not l r d u then retries.
-            {
-                cout << "Retry." << endl;
-                continue;
-            }
-        }//end of while loop
-        
-    }//end of user selection
-    
     
     return 0;
-    // All the letters are shown on the current board in this sample code.  Your version needs to blank out all
-    // the sample letters except the one that has been selected as the destination.
-    // ...
-    
-    
-    
-}//end main()
-
-
-
+}
